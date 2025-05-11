@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_release:
-    name: NIF ${{ matrix.nif }} - ${{ matrix.job.target }} (${{ matrix.job.os }})
+    name: NIF ${{ matrix.nif }} – ${{ matrix.job.target }} (${{ matrix.job.os }})
     runs-on: ${{ matrix.job.os }}
     strategy:
       fail-fast: false
@@ -46,20 +46,32 @@ jobs:
           - { target: x86_64-pc-windows-msvc, os: windows-2019 }
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Extract project version
+        run: echo "PROJECT_VERSION=$(grep -Eo '@version \"[^\"]+' mix.exs | cut -d\\\" -f2)" >> $GITHUB_ENV
         shell: bash
-        run: |
-          # Get the project version from mix.exs
-          echo "PROJECT_VERSION=$(sed -n 's/^  @version "\(.*\)"/\1/p' mix.exs | head -n1)" >> $GITHUB_ENV
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
           target: ${{ matrix.job.target }}
+
+      - name: Install JDK 17 and Maven
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk maven
+      - name: Install JDK 17 (macOS)
+        if: runner.os == 'macOS'
+        run: brew install openjdk@17 maven
+      - name: Install JDK 17 (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
 
       - name: Build the project
         id: build-crate
@@ -70,18 +82,15 @@ jobs:
           target: ${{ matrix.job.target }}
           nif-version: ${{ matrix.nif }}
           use-cross: ${{ matrix.job.use-cross }}
-          project-dir: "native/doc_dig"
+          project-dir: "."
           features: "parallel"
 
-      - name: Artifact upload
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build-crate.outputs.file-name }}
           path: ${{ steps.build-crate.outputs.file-path }}
 
-      - name: Publish archives and packages
-        uses: softprops/action-gh-release@v1
+      - uses: softprops/action-gh-release@v1
         with:
-          files: |
-            ${{ steps.build-crate.outputs.file-path }}
+          files: ${{ steps.build-crate.outputs.file-path }}
         if: startsWith(github.ref, 'refs/tags/')
