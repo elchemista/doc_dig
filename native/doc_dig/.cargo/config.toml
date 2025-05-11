@@ -1,0 +1,29 @@
+# Dynamic-linker & RPATH settings so that `libtika_native.so` is found at run-time.
+#
+# macOS stays unchanged; Linux targets gain `-Wl,-rpath,$ORIGIN`, and for the MUSL
+# targets we keep the existing "no static CRT" flag *plus* the new RPATH flag.
+
+[target.'cfg(target_os = "macos")']
+rustflags = ["-C", "link-arg=-undefined", "-C", "link-arg=dynamic_lookup"]
+
+[target.x86_64-unknown-linux-musl]
+rustflags = [
+    "-C",
+    "target-feature=-crt-static",
+    "-C",
+    "link-arg=-Wl,-rpath,$ORIGIN",
+]
+
+[target.aarch64-unknown-linux-musl]
+rustflags = [
+    "-C",
+    "target-feature=-crt-static",
+    "-C",
+    "link-arg=-Wl,-rpath,$ORIGIN",
+]
+
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["-C", "link-arg=-Wl,-rpath,$ORIGIN"]
+
+[target.aarch64-unknown-linux-gnu]
+rustflags = ["-C", "link-arg=-Wl,-rpath,$ORIGIN"]
