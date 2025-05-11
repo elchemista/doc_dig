@@ -51,7 +51,10 @@ defmodule DocDig.MixProject do
                LICENSE
                checksum-Elixir.DocDig.exs
                native/doc_dig/Cargo.toml
-               native/doc_dig/src
+               native/doc_dig/build.rs
+               native/doc_dig/Cross.toml
+               native/doc_dig/.cargo/config.toml
+               native/doc_dig/src/lib.rs
         ),
       licenses: ["Apache-2.0"],
       links: %{
