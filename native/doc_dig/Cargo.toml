@@ -12,15 +12,15 @@ crate-type = ["cdylib"]
 extractous = "0.3.0"
 rustler = "0.36.1"
 
-openssl = { version = "0.10.64", features = ["vendored"] }
-
 [build-dependencies]
 extractous = "0.3.0"
 
 [patch.crates-io]
-openssl = { git = "https://github.com/ishitatsuyuki/rust-openssl", branch = "0.9.x" }
+# Force openssl-sys to use its bundled sources (no pkg-config)
+openssl-sys = { version = "0.10.64", features = ["vendored"] }
 
-[patch.crates-io.reqwest]
-version = "0.12.7"
-default-features = false
-features = ["blocking", "json", "rustls-tls"]
+reqwest = { version = "0.12.7", default-features = false, features = [
+    "blocking",
+    "json",
+    "rustls-tls",
+] }
