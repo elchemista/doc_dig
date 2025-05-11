@@ -1,7 +1,6 @@
 [package]
 name = "doc_dig"
 version = "0.1.0"
-authors = []
 edition = "2021"
 build = "build.rs"
 
@@ -12,21 +11,16 @@ crate-type = ["cdylib"]
 [dependencies]
 extractous = "0.3.0"
 rustler = "0.36.1"
-openssl = { version = "0.10.72", features = ["vendored"] }
-
-# Force openssl-sys to always build its vendored OpenSSL,
-# even when pulled in by native-tls/reqwest/etc.
-openssl-sys = { version = "0.9.108", features = ["vendored"] }
-
-[patch.crates-io]
-openssl = { version = "0.10.72", features = ["vendored"] }
-
 
 [build-dependencies]
 extractous = "0.3.0"
 
-[profile.release]
-codegen-units = 1
-lto = true
-panic = 'abort'
-strip = "debuginfo"
+# ───────────────────────────
+# Demand that every `reqwest` in the graph:
+#  • disables its default (openssl) features
+#  • enables blocking, JSON, and rustls-tls
+# ───────────────────────────
+[patch.crates-io.reqwest]
+version = "0.12.7"
+default-features = false
+features = ["blocking", "json", "rustls-tls"]
