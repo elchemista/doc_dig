@@ -14,6 +14,10 @@ extractous = "0.3.0"
 rustler = "0.36.1"
 openssl = { version = "0.10.72", features = ["vendored"] }
 
+# Force openssl-sys to always build its vendored OpenSSL,
+# even when pulled in by native-tls/reqwest/etc.
+openssl-sys = { version = "0.9.108", features = ["vendored"] }
+
 [patch.crates-io]
 openssl = { version = "0.10.72", features = ["vendored"] }
 
