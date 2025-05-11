@@ -84,7 +84,7 @@ jobs:
           target: ${{ matrix.job.target }}
           nif-version: ${{ matrix.nif }}
           use-cross: ${{ matrix.job.use-cross }}
-          project-dir: "."
+          project-dir: "native/doc_dig"
           features: "parallel"
 
       - uses: actions/upload-artifact@v4
