@@ -18,7 +18,7 @@ Add to your `mix.exs`:
 ```elixir
 def deps do
   [
-    {:doc_dig, "~> 0.1.0"}
+    {:doc_dig, github: "elchemista/doc_dig", branch: "master"}
   ]
 end
 ```
