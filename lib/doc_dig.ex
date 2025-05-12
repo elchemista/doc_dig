@@ -18,15 +18,15 @@ defmodule DocDig do
   ```
   """
 
-  # use Rustler, otp_app: :doc_dig, crate: "doc_dig"
-  version = Mix.Project.config()[:version]
+  use Rustler, otp_app: :doc_dig, crate: "doc_dig"
+  # version = Mix.Project.config()[:version]
 
-  use RustlerPrecompiled,
-    otp_app: :doc_dig,
-    crate: "doc_dig",
-    base_url: "https://github.com/elchemista/doc_dig/releases/download/v#{version}",
-    force_build: System.get_env("RUSTLER_PRECOMPILATION_EXAMPLE_BUILD") in ["1", "true"],
-    version: version
+  # use RustlerPrecompiled,
+  #   otp_app: :doc_dig,
+  #   crate: "doc_dig",
+  #   base_url: "https://github.com/elchemista/doc_dig/releases/download/v#{version}",
+  #   force_build: System.get_env("RUSTLER_PRECOMPILATION_EXAMPLE_BUILD") in ["1", "true"],
+  #   version: version
 
   @doc """
   Extract text from a **local file** (PDF, DOCX, HTML, etc.).

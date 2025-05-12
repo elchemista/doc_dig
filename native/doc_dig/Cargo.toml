@@ -12,8 +12,8 @@ crate-type = ["cdylib"]
 extractous = "0.3.0"
 rustler = "0.36.1"
 
-# [build-dependencies]
-# extractous = "0.3.0"
+[build-dependencies]
+extractous = "0.3.0"
 
 [patch.crates-io]
 reqwest = { version = "0.12.7", default-features = false, features = [
